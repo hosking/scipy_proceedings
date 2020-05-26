@@ -20,14 +20,14 @@ Falsification for Software: effective validation tools for scientific code
     and analyse their data
 
 
-This is a methods paper.  My goals are to:
-
-1. Convince developers of scientific software that using property-based testing
-   will deliver outcomes they care about, i.e.: more reliable software, without
-   burdensome effort or learning curves.
-
-2. Provide an artifact which convinces colleagues and supervisors to support
-   work on property-based testing, i.e. a credible source for the claims above.
+.. This is a methods paper.  My goals are to:
+..
+.. 1. Convince developers of scientific software that using property-based testing
+..    will deliver outcomes they care about, i.e.: more reliable software, without
+..    burdensome effort or learning curves.
+..
+.. 2. Provide an artifact which convinces colleagues and supervisors to support
+..    work on property-based testing, i.e. a credible source for the claims above.
 
 
 
@@ -42,16 +42,16 @@ generation ago which could not be acomplished quickly by a graduate student toda
 Unfortunately, neither raw computation nor the available software guarantee that
 our results are meaningful [#]_.  Indeed, :cite:`Soergel2015` estimates that
 
-.. [#] There is a saying that any fool can make a mistake - but to make billions of mistakes per second, you need a computer.
-
     any reported scientific result could very well be wrong if data have passed
     through a computer, and that these errors may remain largely undetected. It is
     therefore necessary to greatly expand our efforts to validate scientific software.
 
 This paper argues that property-based testing :cite:`PraisePBT` is considerably more
 effective for validation of Python programs than using only traditional example-based
-tests [#]_, without demanding new skills or workflows.
+tests [#]_, without demanding new skills or workflows, and supports this argument
+with a variety of examples from well-known scientific Python projects.
 
+.. [#] There is a saying that any fool can make a mistake - but to make billions of mistakes per second, you need a computer.
 .. [#] e.g. common workflows using ``pytest``.  If you have no automated tests at all, fix that first, but your second test could reasonably use Hypothesis.
 
 
@@ -95,9 +95,6 @@ Effective testing lets you focus on your science, not your code.
 Analogy to large experimental aparatus - unexpected results mean checking
 all of your equipment!
 
-
-Softmax is a nice example for loss of precision
-
 TODO: look at PLYMI testing PR - describing input data is a pain point
 most testing is actually really easy once you have good input data
 
@@ -121,7 +118,21 @@ between all tests, even by novice contributors.
 Properties and Case Studies
 ---------------------------
 
-.. todo introduce this section; each property plus discussion
+In this section I present four categories of properties.  While not an exhaustive
+list, they are relevant to a very wide range of scientific software - and when
+tested often uncover serious errors.
+
+.. TODO explain the structure of subsections, after they have one.
+
+
+I also present case studies of real-world bugs from the SciPy stack, especially
+from Numpy and Astropy.  This is *not* because these packages are more error-prone
+than other software - on the contrary, they are of astonishingly high quality
+despite catastrophic under-resourcing :cite:`AstropyProblem` :cite:`NumpyFunding`.
+
+The bugs presented below were discovered, reported, and fixed within a few days
+thanks to a community-driven and open source development model; and projects from
+Astropy to Xarray - via Numpy and Pandas - have begun to adopt property-based tests.
 
 
 
@@ -131,6 +142,10 @@ Outputs within expected bounds
 ..         Conservation laws, physical bounds, and other domain knowledge
 .. https://github.com/astropy/astropy/pull/10373
 
+
+Softmax is a nice example for numerical stability - not arguing that PBT is better
+than a stability analysis, rather that the status quo is often that we only
+analyse particular routines in isolation.  Empirical checks can also be easier!
 
 
 
@@ -185,13 +200,14 @@ Metamorphic properties
 
 Conclusion
 ----------
-..         Karl Popper says you should use Hypothesis
 
-Or possibly "recommendations"?
+Example-based tests provide anecdotal evidence for validity, in that the software
+behaves as expected on a few known and typically simple inputs.  Property-based
+tests require a precise description of possible inputs and a more general specification,
+but support heuristic, guided, and random search for falsifying counter-examples.
 
-
-
-
+I argue that this Popperian approach is superior to the status quo of using only
+example-based tests, and hope that the propery-based revolution comes quickly.
 
 
 Acknowledgements
