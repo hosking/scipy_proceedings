@@ -5,24 +5,19 @@
 :bibliography: mybib
 
 
------------------------------------------------------
-Unreasonably effective validation for scientific code
------------------------------------------------------
-.. or something about Popper / Falsification / scientific method?
-
-.. class:: abstract
-
-
-
-
-   Aiming for two paragramps or so here
+--------------------------------------------------------------------------
+Falsification for Software: effective validation tools for scientific code
+--------------------------------------------------------------------------
 
 .. class:: keywords
 
    property-based testing, validation, verification
 
 
-.. ------------------------------------------------------------
+.. class:: abstract
+
+    Researchers in all fields are increasingly dependent on software to collect
+    and analyse their data
 
 
 This is a methods paper.  My goals are to:
@@ -35,43 +30,123 @@ This is a methods paper.  My goals are to:
    work on property-based testing, i.e. a credible source for the claims above.
 
 
-Paper outline
 
-    Introduction
-        Motivation: "did everything right, got wrong results" is a nightmare
-        Who is this paper for?  Mostly library authors.
-        Example-based vs. property-based testing
-        Methods paper, with case studies of general techniques used in Sci Py ecosystem
-        Not about blame - great work by overstretched volunteers.  (if it happens to them, it could happen to anyone)
+Introduction
+------------
 
-    Properties let you detect bugs without knowing the right answer
-        Does not crash, feat. effective use of assertions, illustrated with np unicode
-        Bounded errors, feat. Astropy, Time, and :code:`target()`
-        Differential testing, feat. numpy einsum optimize bug
-        Round-trip properties - esp. IO routines, but also coordinate systems
-        Conservation laws, physical bounds, and other domain knowledge
-        Metamorphic properties
+Much research now depends on software for data collection, analysis, and reporting;
+including on software produced and maintained by researchers.  This has empowered
+us enormously: it is hard to imagine an analysis that was possible *at all* a
+generation ago which could not be acomplished quickly by a graduate student today.
 
-    Conclusion
-        Karl Popper says you should use Hypothesis
+Unfortunately, neither raw computation nor the available software guarantee that
+our results are meaningful [#]_.  Indeed, :cite:`Soergel2015` estimates that
 
+.. [#] There is a saying that any fool can make a mistake - but to make billions of mistakes per second, you need a computer.
 
+    any reported scientific result could very well be wrong if data have passed
+    through a computer, and that these errors may remain largely undetected. It is
+    therefore necessary to greatly expand our efforts to validate scientific software.
 
+This paper argues that property-based testing :cite:`PraisePBT` is considerably more
+effective for validation of Python programs than using only traditional example-based
+tests [#]_, without demanding new skills or workflows.
 
-
-
+.. [#] e.g. common workflows using ``pytest``.  If you have no automated tests at all, fix that first, but your second test could reasonably use Hypothesis.
 
 
+What is property-based testing?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Where example-based tests check for an exact expected output, property-based tests
+make *less precise* but *more general* assertions.  By giving up hand-specification
+of the expected output, we gain tests that can be run on a wide range of inputs.
+
+Tests which use random data are usually property-based, but using a library like
+Hypothesis :cite:`MacIver2019` which is designed for the task has several advantages:
+
+- a concise and expressive interface to describe the range of allowed inputs
+- test failures are cached and replayed - never lose a bug, even from other machines
+- automatic shrinking, to present a minimal failing example for each distinct error
+
+
+
+Link properties to leaky abstractions and managing complexity
+
+shrinking is really really nice - hard to describe how much of a difference it makes
+
+so the advantage is that your data description is concise and general,
+and your tests express what you actually care about
+
+empowers you to describe data in rich way, makes reasoning easier.
+
+
+
+Why is this so effective?
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+"test-driven research" - combining uncertainty about research domain with
+possibly bugs is really really hard to deal with.  Trying to narrow range
+of possible reasons for wonky results.
+
+Effective testing lets you focus on your science, not your code.
+Analogy to large experimental aparatus - unexpected results mean checking
+all of your equipment!
+
+
+Softmax is a nice example for loss of precision
+
+TODO: look at PLYMI testing PR - describing input data is a pain point
+most testing is actually really easy once you have good input data
+
+describing core data structures is key - for Numpy arrays, indexers, etc.
+also relationships - e.g. compatible shapes (for pytorch, which device data is on)
+once you get this right, you don't need to think about feature interactions, they just happen
+
+many contributors are not sophisticated SWEs, so testing is very very valuable
+strategies allow you to ask "is all valid data allowed" rather than "are we
+covering all the edge cases"
+
+look up mygrad would be impossible without hypothesis
+
+really really vauable to share the sophistication and care that goes into strategies
+between all tests, even by novice contributors.
 
 
 
 
 
+Properties and Case Studies
+---------------------------
+
+.. todo introduce this section; each property plus discussion
+
+
+
+Outputs within expected bounds
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..         Bounded errors, feat. Astropy, Time, and :code:`target()`
+..         Conservation laws, physical bounds, and other domain knowledge
+.. https://github.com/astropy/astropy/pull/10373
 
 
 
 
+Round-trip properties
+~~~~~~~~~~~~~~~~~~~~~
+..         Does not crash, feat. effective use of assertions, illustrated with np unicode
+..         Round-trip properties - esp. IO routines, but also coordinate systems
+.. https://github.com/numpy/numpy/issues/15363
 
+
+
+
+Differential testing
+~~~~~~~~~~~~~~~~~~~~
+..         Differential testing, feat. numpy einsum optimize bug
+.. https://github.com/numpy/numpy/issues/10930
 
 
 
@@ -98,6 +173,9 @@ Paper outline
 
 
 
+Metamorphic properties
+~~~~~~~~~~~~~~~~~~~~~~
+..         Metamorphic properties
 
 
 
@@ -105,67 +183,20 @@ Paper outline
 
 
 
+Conclusion
+----------
+..         Karl Popper says you should use Hypothesis
+
+Or possibly "recommendations"?
 
 
 
 
 
 
+Acknowledgements
+----------------
 
-
-Introduction
-------------
-
-:cite:`MacIver2019`
-
-
-
-
-
-Important Part
---------------
-
-Maecenas [#]_ diam turpis, placerat [#]_ at adipiscing ac, pulvinar id metus.
-
-.. [#] On the one hand, a footnote.
-.. [#] On the other hand, another footnote.
-
-.. figure:: figure1.png
-
-   This is the caption. :label:`egfig`
-
-.. figure:: figure1.png
-   :align: center
-   :figclass: w
-
-   This is a wide figure, specified by adding "w" to the figclass.  It is also
-   center aligned, by setting the align keyword (can be left, right or center).
-
-.. figure:: figure1.png
-   :scale: 20%
-   :figclass: bht
-
-   This is the caption on a smaller figure that will be placed by default at the
-   bottom of the page, and failing that it will be placed inline or at the top.
-   Note that for now, scale is relative to a completely arbitrary original
-   reference size which might be the original size of your image - you probably
-   have to play with it. :label:`egfig2`
-
-As you can see in Figures :ref:`egfig` and :ref:`egfig2`, this is how you reference auto-numbered
-figures.
-
-.. table:: This is the caption for the materials table. :label:`mtable`
-
-   +------------+----------------+
-   | Material   | Units          |
-   +============+================+
-   | Stone      | 3              |
-   +------------+----------------+
-   | Water      | 12             |
-   +------------+----------------+
-   | Cement     | :math:`\alpha` |
-   +------------+----------------+
-
-
-We show the different quantities of materials required in Table
-:ref:`mtable`.
+Thanks to David MacIver and the many others who have contributed to Hypothesis;
+to Ryan Soklaski for his comments on an early draft of this paper; to Anne Archibald
+for her work with threshold tests; and to XXXX.
